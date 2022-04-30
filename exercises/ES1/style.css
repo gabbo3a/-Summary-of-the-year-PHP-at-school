@@ -1,0 +1,63 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+/*Perfect centering*/
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(182, 178, 178, 0.363);
+}
+
+/*Style date card*/
+.calendar-day {
+    width: auto;
+    border-radius: 30px;
+}
+
+.month {
+    font-size: 350%;
+    border-radius: 30px 30px 0 0;
+    background-color: hsl(36, 100%, 60%);
+    color: whitesmoke;
+    padding: 10px 25px;
+}
+
+.day {
+    border-radius: 0 0 30px 30px;
+    background-color: whitesmoke;
+}
+
+.month,
+.number-day,
+.literals-day,
+.time {
+    text-align: center;
+    font-weight: bold;
+}
+
+.number-day {
+    font-size: 100px;
+}
+
+.literals-day {
+    font-size: 230%;
+    color: hsl(36, 100%, 60%);
+}
+
+.time {
+    margin-top: 25px;
+    padding: 10px;
+    font-size: 130%;
+    border-top: 6px solid hsl(36, 87%, 53%);
+    background-color: hsla(36, 100%, 60%, );
+}

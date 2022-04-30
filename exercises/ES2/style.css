@@ -1,0 +1,76 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    font-size: x-large;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+/*Perfect centering*/
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(182, 178, 178, 0.363);
+}
+
+/**/
+.container {
+    width: clamp(300px, 30%);
+}
+
+/*Form*/
+button,
+select {
+    background-color: #ddd;
+    border: solid 2px royalblue;
+    margin: 4px 2px;
+    padding: 5px 0px;
+    width: 100%;
+}
+
+.information-box,
+select {
+    text-align: center;
+}
+
+select {
+    border-radius: 5px;
+}
+
+select:hover {
+    background-color: royalblue;
+    color: white;
+}
+
+select:hover option {
+    background-color: white;
+    color: black;
+
+}
+
+/*Button*/
+button {
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+button:hover {
+    background-color: royalblue;
+    color: white;
+}
+
+/*Information box*/
+.information-box {
+    display: block;
+    margin-top: 10px;
+    padding: 15px;
+    background-color: rgba(128, 153, 228, 0.582);
+    border-top: solid 3px royalblue;
+    border-radius: 5px 5px 16px 16px;
+}
