@@ -11,7 +11,8 @@
     foreach ($noLoggedPages as $noPage) {
         if($noPage == $nextPageReq) {
             $isLogged = false;
-            // session_destroy(); 
+            // Non mi fa distriggere la sessione 😭
+            // unset($_COOKIE['PHPSESSID']); // print_r($_COOKIE);
             break;
         }
     }

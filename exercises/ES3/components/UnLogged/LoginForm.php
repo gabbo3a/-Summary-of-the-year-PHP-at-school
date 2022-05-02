@@ -1,13 +1,9 @@
 <?php namespace LoginForm; /* scope */?>
 
 <?php include_once 'services/connection.php';            use connection; ?>
-<?php include_once 'accounting/accounting.php';          use accounting; ?>
 <?php include_once 'components/PopUps/CorrectPopup.php'; use CorrectPopup; ?>
 <?php include_once 'services/DBservices.php';            use DBservices; ?>
 <?php include_once 'services/SessionServices.php';       use SessionServices; ?>
-
-<?php // accounting\setLastPage('register'); ?>
-<?php // accounting\setNextPage('register.servises'); ?>
 
 <?php function LoginForm() { ?>
     <?php extract(connection\getConn()); ?>

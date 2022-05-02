@@ -84,29 +84,134 @@ function getTables() {
     return $tables;
 }
 
+// 
+function getTableRelations($table) {
+    extract(connection\getConn());   // Import DB connection
+
+    $sql = "SELECT * 
+            FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+            WHERE TABLE_SCHEMA = 'amara_db' 
+                AND TABLE_NAME = '$table';";
+    
+    $result = $conn->query($sql); 
+    
+    $descriptors = array();
+    while ($row = $result->fetch_assoc()) { // Extract data
+        if ($row['REFERENCED_TABLE_NAME'] != NULL) {
+            $d = array(
+                "TABLE_NAME" => "$table", // troppo
+                "COLUMN_NAME" => $row['COLUMN_NAME'],
+                "REFERENCED_TABLE_NAME" => $row['REFERENCED_TABLE_NAME'],
+                "REFERENCED_COLUMN_NAME" => $row['REFERENCED_COLUMN_NAME'],
+            );
+            array_push($descriptors, $d);
+        }
+    }
+    
+    // print_r($descriptors);
+    // print_r($descriptors[0]['REFERENCED_TABLE_NAME'] === null);  
+    return $descriptors;
+}
+
+// get all filedl meno quelli di relazione
+function getFields($table) {
+    extract(connection\getConn());   // Import DB connection
+
+    $sql = "SELECT COLUMN_NAME 
+            FROM INFORMATION_SCHEMA.COLUMNS 
+            WHERE TABLE_NAME = '$table' AND TABLE_SCHEMA = 'amara_db';";
+    $result = $conn->query($sql);
+
+    $fields = array();
+    while ($row = $result->fetch_assoc()) {
+        $column = $row['COLUMN_NAME'];
+        array_push($fields, "$table.$column");
+    }  
+    return $fields;
+}
+
+
 function getTableData() {
     extract(connection\getConn());  // Import DB connection
 
-    /*
-        // completare tutto le relations
-        SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'amara_db';
-        SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = 'amara_db';
-        SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = 'amara_db' AND TABLE_NAME = 'users';
-    */
-
     $tableNames = getTables();
     $tableResults = array();
-    // print_r($tableNames);
 
     foreach ($tableNames as $name) {
-        $result = $conn->query("SELECT * FROM `$name` LIMIT  5");
-        $table = array();
+        $descriptors = getTableRelations($name);
 
+        // Build query with dymamic inner join
+        $part1 = NULL;
+        $part2 = "";
+    
+        foreach ($descriptors as $desc) {
+            // chacing tabelle gia inserite 🍆
+
+            // Extract relations data 
+            $table2 = $desc['REFERENCED_TABLE_NAME'];
+            $foreign_key = $desc['COLUMN_NAME'];
+            $primary_key = $desc['REFERENCED_COLUMN_NAME'];
+
+            // Get fields each table 
+            $fields = getFields($name);
+            $fields_table2 = getFields($table2);
+        
+            // Add print field and reduce repete data
+            foreach ($fields as $field) $part1 .=  "$field AS `$field`, ";
+            foreach ($fields_table2 as $field) {
+                if ($field !== "$table2.$primary_key") 
+                    $part1 .=  "$field AS `$field`, ";
+            }
+
+            // Add relations
+            $part2 .= "INNER JOIN $table2 ON $name.$foreign_key = $table2.$primary_key ";
+        }
+        
+        // End build query
+        if ($part1 === NULL)  $part1 = "SELECT * ";
+        else $part1 = "SELECT " . substr($part1, 0, -2);
+        $part1 .= " FROM `$name`";
+        $part2 .= "LIMIT  2; ";
+        $sql = $part1 . $part2;
+        
         // Fetch result DB ALL table
-        while ($row = $result->fetch_assoc()) array_push($table, $row); // Extract data  
+        $table = array();
+        $result = $conn->query($sql);
+        while ($row = $result->fetch_assoc()) array_push($table, $row); // Extract data
         array_push($tableResults, $table);
-
     }
 
+    // print_r("<pre>".print_r($tableResults, true)."</pre>");
     return array("tableNames" => $tableNames, "results" => $tableResults);
 }
+
+
+/*          
+    print_r("$name => <br> ");
+    // print_r($sql ."<br><br>");
+    // continue; // break;
+    //  print("<pre>".print_r($row , true)."</pre>");
+*/
+
+/*
+    // completare tutto le relations
+    SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'amara_db';
+    SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = 'amara_db';
+    SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = 'amara_db' AND TABLE_NAME = 'users';
+
+    // Tipo di risposta 
+    [2] => Array ( 
+        [CONSTRAINT_CATALOG] => def 
+        [CONSTRAINT_SCHEMA] => amara_db 
+        [CONSTRAINT_NAME] => users_ibfk_1 
+        [TABLE_CATALOG] => def 
+        [TABLE_SCHEMA] => amara_db 
+        [TABLE_NAME] => users 
+        [COLUMN_NAME] => provice 
+        [ORDINAL_POSITION] => 1 
+        [POSITION_IN_UNIQUE_CONSTRAINT] => 1 
+        [REFERENCED_TABLE_SCHEMA] => amara_db 
+        [REFERENCED_TABLE_NAME] => provinces 
+        [REFERENCED_COLUMN_NAME] => code ) 
+    )
+*/

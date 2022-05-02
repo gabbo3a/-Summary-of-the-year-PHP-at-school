@@ -1,7 +1,6 @@
 <?php namespace RegisterForm; ?>
 
 <?php include_once 'services/connection.php';            use connection; ?>
-<?php include_once 'accounting/accounting.php';          use accounting; ?>
 <?php include_once 'components/PopUps/CorrectPopup.php'; use CorrectPopup; ?>
 <?php include_once 'services/DBservices.php';            use DBservices; ?>
 

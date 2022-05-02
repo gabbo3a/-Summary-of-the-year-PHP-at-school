@@ -34,7 +34,7 @@ function sessionUserSetUp($obj) {
     }
 }
 
-function sessionUserUnset($obj){
+function sessionUserUnset($obj) {
     session_unset();
 }
 
