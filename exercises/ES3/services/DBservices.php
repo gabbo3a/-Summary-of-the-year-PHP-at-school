@@ -84,7 +84,7 @@ function getTables() {
     return $tables;
 }
 
-// 
+//
 function getTableRelations($table) {
     extract(connection\getConn());   // Import DB connection
 
@@ -113,7 +113,7 @@ function getTableRelations($table) {
     return $descriptors;
 }
 
-// get all filedl meno quelli di relazione
+//
 function getFields($table) {
     extract(connection\getConn());   // Import DB connection
 
@@ -125,11 +125,11 @@ function getFields($table) {
     $fields = array();
     while ($row = $result->fetch_assoc()) {
         $column = $row['COLUMN_NAME'];
-        array_push($fields, "$table.$column");
+        // array_push($fields, "$table.$column");
+        array_push($fields, array("table" => $table, "column" => $column));
     }  
     return $fields;
 }
-
 
 function getTableData() {
     extract(connection\getConn());  // Import DB connection
@@ -145,8 +145,6 @@ function getTableData() {
         $part2 = "";
     
         foreach ($descriptors as $desc) {
-            // chacing tabelle gia inserite 🍆
-
             // Extract relations data 
             $table2 = $desc['REFERENCED_TABLE_NAME'];
             $foreign_key = $desc['COLUMN_NAME'];
@@ -157,10 +155,21 @@ function getTableData() {
             $fields_table2 = getFields($table2);
         
             // Add print field and reduce repete data
-            foreach ($fields as $field) $part1 .=  "$field AS `$field`, ";
+            foreach ($fields as $field) {
+                $alias = "`{$field['column']}[this]`";
+                $f = "{$field['table']}.{$field['column']}";
+
+                // check same data todo -----------------------
+                // if ($field['table'].$field['column'] !== $table2.$foreign_key) 
+                    $part1 .=  "$f AS $alias, ";
+            }
             foreach ($fields_table2 as $field) {
-                if ($field !== "$table2.$primary_key") 
-                    $part1 .=  "$field AS `$field`, ";
+                $alias = "`{$field['column']}[those]`";
+                $f = "{$field['table']}.{$field['column']}";
+                
+                // check same data todo -----------------------
+                // if ($field['table'].$field['column'] !== $name.$primary_key) 
+                    $part1 .=  "$f AS $alias, ";
             }
 
             // Add relations
