@@ -57,7 +57,10 @@ function getUserDataByEmail($obj){
     extract(connection\getConn()); 
 
     // Build query
-    $sql = "SELECT * FROM users WHERE email ='{$obj['email']}'";
+    $sql = "
+    SELECT `email`, users.name username, `surname`, `gender`, provinces.name province,  `fevColor`, `birthDate`, `tel` 
+    FROM `users` 
+    JOIN provinces ON users.provice = provinces.code;";
     $user = $conn->query($sql)->fetch_assoc(); // Extract data
     return $user;
 }

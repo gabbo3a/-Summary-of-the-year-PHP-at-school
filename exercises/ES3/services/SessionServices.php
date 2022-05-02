@@ -19,14 +19,27 @@ function sessionUserSetUp($obj) {
 
     // Set session data
     if(isset($obj)) {
+
+
+
         $userData = DBservices\getUserDataByEmail($obj);    // query
+        // print_r( $userData);
         $_SESSION['email']      =  $userData['email'];
-        $_SESSION['name']       =  $userData['name'];
-        $_SESSION['name']       =  $userData['name'];
-        $_SESSION['gender']     =  $userData['gender'];
-        $_SESSION['provice']    =  $userData['provice'];
+        $_SESSION['username']   =  $userData['username'];
+
+        switch ($userData['gender']) {
+            case 'm': $_SESSION['gender'] = 'male';   break;
+            case 'f': $_SESSION['gender'] = 'female'; break;
+            case 'o': $_SESSION['gender'] = 'other';  break;
+        }
+
+        $_SESSION['province']   =  $userData['province'];
         $_SESSION['fevColor']   =  $userData['fevColor'];
-        $_SESSION['birthDate']  =  $userData['birthDate'];
+
+
+        $date = explode( '-', $userData['birthDate']);
+        $_SESSION['birthDate']  = "$date[2]/$date[1]/$date[0]";
+
         $_SESSION['tel']        =  $userData['tel'];
         
         // Redirect on home
@@ -37,15 +50,3 @@ function sessionUserSetUp($obj) {
 function sessionUserUnset($obj) {
     session_unset();
 }
-
-
-
-
-
-
-
-
-
-
-
-
