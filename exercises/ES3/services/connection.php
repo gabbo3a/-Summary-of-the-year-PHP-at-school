@@ -8,7 +8,7 @@
         $servername = "localhost";
         $username = "root";
         $password = "";
-        $dbname = "amara_db";
+        $dbname = "amara_db"; // my_hostingcompitigenerali
 
         // Create connection
         $conn = new mysqli($servername, $username, $password, $dbname) or die(mysqli_error());

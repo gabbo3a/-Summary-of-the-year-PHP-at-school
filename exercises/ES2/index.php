@@ -19,8 +19,11 @@
     <div class="container"> 
         <form action="index.php" method="get">
             <select name="word">
-                <?php foreach($words as $word => $value) ?>
-                <option value=<?php echo $value;?>> <?php echo $word; ?></option>      
+                <?php
+                    //Dynamic option
+                    foreach($words as $word => $value)
+                        echo ("<option value=\"$value\">$word</option>");
+                ?>      
             </select>
             <button type="submit">Invia</button>
         </form>

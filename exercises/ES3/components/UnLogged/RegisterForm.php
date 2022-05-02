@@ -19,7 +19,7 @@
     
     <div class="container-fluid w-50 p-4">
         <?php if(!isset($_REQUEST['services'])) { ?>
-            <form action="#" method="post">
+            <form action="#" method="post" onsubmit="">
                 
                 <!-- Name & Surname -->
                 <h4>Name, Surname, Email</h4>
@@ -66,13 +66,13 @@
                 <!-- Lingue -->
                 <h4>Lingue Parlate</h4>
                 <?php $result = $conn->query("SELECT * FROM languages"); // Fetch languages from db ?>
-                    <div class="row align-items-start ps-4 pe-4">
-                        <?php while ($row = $result->fetch_assoc()) { ?>
-                            <div class="form-check col-2">
-                                <input type="checkbox" name="languagesCodes[]" class="form-check-input" value="<?php echo $row["code"]?>"><?php echo $row["name"]?></option>
-                            </div>
-                        <?php }?>
-                    </div>
+                <div class="row align-items-start ps-4 pe-4">
+                    <?php while ($row = $result->fetch_assoc()) { ?>
+                        <div class="form-check col-2">
+                            <input type="checkbox" name="languagesCodes[]" class="form-check-input" value="<?php echo $row["code"]?>"><?php echo $row["name"]?></option>
+                        </div>
+                    <?php }?>
+                </div>
                 
                 <!-- Favourite Color -->
                 <h4>Favourite Color</h4>
@@ -93,19 +93,22 @@
                 </div>
 
                 <!-- Password -->
-                    <h4>Password</h4>
-                    <div class="mb-3">
-                        <input type="password" name="password" class="form-control" placeholder="Password">
-                        <input type="password" class="form-control" placeholder="Confirm Password">
-                    </div>
-
-                    <div class="container fluid d-flex justify-content-between">
-                        <span>
-                            <input type="checkbox" class="form-check-input" onclick="ShowPassword()">
-                            <label class="ms-2">Show Password</label>
-                        </span>
-                        <span id="ERROR_MESSAGE" style="color: red"></span> <!-- Error Message -->
-                    </div>
+                <h4>Password</h4>
+                <div class="mb-3">
+                    <input 
+                    type="password" name="password" class="form-control" placeholder="Password" id="pass1"
+                    onkeyup="checkPassword('pass1', 'pass2', 'ERROR_MESSAGE', 'sub')"
+                    >
+                    <input 
+                    type="password" class="form-control" placeholder="Confirm Password" id="pass2"
+                    onkeyup="checkPassword('pass1', 'pass2', 'ERROR_MESSAGE', 'sub')"
+                    >
+                    <span>
+                        <input type="checkbox" class="form-check-input" onclick="showPassword('pass1','pass2')">
+                        <label class="ms-2">Show Password</label>
+                    </span>
+                </div>
+                <span id="ERROR_MESSAGE" style="color: red"></span> <!-- Error Message -->
                 <!-- END Password -->
                 
                 <!-- Submit -->
@@ -114,7 +117,8 @@
                         id="sub"
                         type="submit" 
                         name="services" value="Registrati" 
-                        class="btn btn-outline-primary" 
+                        class="btn btn-outline-primary"
+                        disabled
                     >
                 </div>
             </form>

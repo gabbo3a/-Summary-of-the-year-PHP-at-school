@@ -88,6 +88,7 @@ function getTables() {
 function getTableRelations($table) {
     extract(connection\getConn());   // Import DB connection
 
+    // cambiare con var
     $sql = "SELECT * 
             FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
             WHERE TABLE_SCHEMA = 'amara_db' 
