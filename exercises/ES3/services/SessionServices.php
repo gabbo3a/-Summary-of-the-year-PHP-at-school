@@ -20,8 +20,6 @@ function sessionUserSetUp($obj) {
     // Set session data
     if(isset($obj)) {
 
-
-
         $userData = DBservices\getUserDataByEmail($obj);    // query
         // print_r( $userData);
         $_SESSION['email']      =  $userData['email'];

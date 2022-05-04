@@ -29,12 +29,13 @@ function register($obj) {
     $id_user = $conn->insert_id;
 
     // Add leanguages user_leanguages
-    foreach ($obj['languagesCodes'] as $code) {
-        $sql = "
-            INSERT INTO `users_languages` (`id`, `id_user`, `code_language`) 
-            VALUES (NULL, '$id_user','$code')";
-        $conn->query($sql);
-    }
+    if (isset($obj['languagesCodes']))
+        foreach ($obj['languagesCodes'] as $code) {
+            $sql = "
+                INSERT INTO `users_languages` (`id`, `id_user`, `code_language`) 
+                VALUES (NULL, '$id_user','$code')";
+            $conn->query($sql);
+        }
 
     // var_dump($user_id);
     // var_dump($obj['languagesCodes']);
@@ -184,7 +185,7 @@ function getTableData() {
         if ($part1 === NULL)  $part1 = "SELECT * ";
         else $part1 = "SELECT " . substr($part1, 0, -2);
         $part1 .= " FROM `$name`";
-        $part2 .= "LIMIT  2; ";
+        $part2 .= "LIMIT  100; ";
         $sql = $part1 . $part2;
         
         // Fetch result DB ALL table
